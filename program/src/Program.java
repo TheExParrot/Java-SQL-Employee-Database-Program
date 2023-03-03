@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 public class Program {
 
-    public static void main (String args[]) {
+    public static void main (String[] args) {
 
         /* create scanner for user inputs */
         Scanner scanner = new Scanner(System.in);
@@ -22,12 +22,21 @@ public class Program {
 
                 /* connection was successful from here on */
 
-                /* create SQL statement */
+                /* create SQL query object */
                 Statement stmt=con.createStatement();
 
-                ResultSet rs=stmt.executeQuery("SELECT * FROM employees");
+                /* construct the string based on user inputs */
+                // query = "SELECT * FROM employees"
+                String query = "";
+
+                /* obtain result set */
+                ResultSet rs=stmt.executeQuery(query);
+
+                /* print result set */
                 while(rs.next())
                     System.out.println(rs);
+
+                /* close the connection */
                 con.close();
 
 
