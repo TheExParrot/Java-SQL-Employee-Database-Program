@@ -118,21 +118,11 @@ public class SQLStatementCreator extends JFrame implements ActionListener {
             statementsArea.append(sql + "\n");
             sql.append(";");
             this.statements.add(sql);
-            System.out.println(this.statements);
         }
     }
 
-    public static void main(String[] args) {
-
-        /* create database information */
-        DatabaseInformation db = new DatabaseInformation();
-        db.addTable("employees", new String[]{"empID", "empName", "email", "roleID", "deptID"});
-        db.addTable("projects", new String[]{"projectID", "projectName", "budget", "start_date"});
-        db.addTable("departments", new String[]{"deptID", "deptName"});
-        db.addTable("roles", new String[]{"roleID", "title", "salary"});
-        db.addTable("project_employees", new String[]{"projectID", "empID"});
-        db.addTable("project_departments", new String[]{"deptID", "projectID"});
-
-        new SQLStatementCreator(db);
+    public ArrayList<StringBuilder> getStatements() {
+        return statements;
     }
+
 }

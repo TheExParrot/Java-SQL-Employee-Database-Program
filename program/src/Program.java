@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Program {
@@ -10,36 +11,45 @@ public class Program {
 
         try{
             try {
-                /* enter user, password and url */
-                Class.forName("com.mysql.jdbc.Driver");
-                System.out.print("Enter username: ");
-                String user = scanner.nextLine();
-                System.out.print("Enter password: ");
-                String password = scanner.nextLine();
-                System.out.print("Enter database URL: ");
-                String url = scanner.nextLine();
-                Connection connection = DriverManager.getConnection(url, user, password);
 
-                /* connection was successful from here on or skipped */
+                /* create sql statements set to execute */
+                DatabaseInformation db =
+                        new DatabaseInformation("employeeDBjson.json");
+                SQLStatementCreator creator = new SQLStatementCreator(db);
+                ArrayList<StringBuilder> statements = creator.getStatements();
 
-                /* construct the string based on user inputs */
+                /* ask if the user wants to connect */
+                System.out.print("Do you wish to connect to an SQL database? (y/n) ");
+                String input = scanner.nextLine().toLowerCase();
 
-                // query = "SELECT * FROM employees"
-                String query = "";
+                /* if the user wishes to execute the statements */
+                if (input.equals("y")) {
+                    /* enter user, password and url */
+                    Class.forName("com.mysql.jdbc.Driver");
+                    System.out.print("Enter username: ");
+                    String user = scanner.nextLine();
+                    System.out.print("Enter password: ");
+                    String password = scanner.nextLine();
+                    System.out.print("Enter database URL: ");
+                    String url = scanner.nextLine();
+                    Connection connection = DriverManager.getConnection(url, user, password);
 
-                /* create SQL query object */
-                Statement statement = connection.createStatement();
+                    /* create SQL query object */
+                    Statement statement = connection.createStatement();
 
-                /* obtain result set */
-                ResultSet resultSet = statement.executeQuery(query);
+                    /* obtain result set */
+                    ArrayList<ResultSet> results = new ArrayList<>();
+                    for (StringBuilder s: statements) {
+                        results.add(statement.executeQuery(s.toString()));
+                    }
 
-                /* print result set */
-                while(resultSet.next())
-                    System.out.println(resultSet);
+                    /* print result set
+                    while (resultSet.next())
+                        System.out.println(resultSet);*/
 
-                /* close the connection */
-                connection.close();
-
+                    /* close the connection */
+                    connection.close();
+                }
 
                 /* exceptions */
             } catch (ClassNotFoundException e) {

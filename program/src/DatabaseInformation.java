@@ -9,6 +9,10 @@ public class DatabaseInformation {
         this.database = new HashMap<>();
     }
 
+    public DatabaseInformation(String jsonFilename) {
+        this.database = new JSONHandler().getHashMapFromJson(jsonFilename);
+    }
+
     public void addTable(String table, String[] attributes) {
         database.put(table, attributes);
     }
@@ -22,5 +26,7 @@ public class DatabaseInformation {
         Arrays.sort(tables);
         return tables;
     }
+
+
 
 }

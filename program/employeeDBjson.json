@@ -1,0 +1,32 @@
+{
+  "employees": [
+    "empID",
+    "empName",
+    "email",
+    "roleID",
+    "deptID"
+  ],
+  "projects": [
+    "projectID",
+    "projectName",
+    "budget",
+    "start_date"
+  ],
+  "departments": [
+    "deptID",
+    "deptName"
+  ],
+  "roles": [
+    "roleID",
+    "title",
+    "salary"
+  ],
+  "project_employees": [
+    "projectID",
+    "empID"
+  ],
+  "project_departments": [
+    "deptID",
+    "projectID"
+  ]
+}
