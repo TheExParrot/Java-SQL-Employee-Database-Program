@@ -1,33 +1,31 @@
--- MySQL Workbench Forward Engineering
-
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
--- Schema employeedb
+-- Schema employeeDB
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema employeedb
+-- Schema employeeDB
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `employeedb` DEFAULT CHARACTER SET utf8 ;
-USE `employeedb` ;
+CREATE SCHEMA IF NOT EXISTS `employeeDB` DEFAULT CHARACTER SET utf8 ;
+USE `employeeDB` ;
 
 -- -----------------------------------------------------
--- Table `employeedb`.`departments`
+-- Table `employeeDB`.`departments`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `employeedb`.`departments` (
+CREATE TABLE IF NOT EXISTS `employeeDB`.`departments` (
   `deptID` INT NOT NULL,
-  `name` VARCHAR(45) NOT NULL,
+  `deptName` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`deptID`))
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `employeedb`.`roles`
+-- Table `employeeDB`.`roles`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `employeedb`.`roles` (
+CREATE TABLE IF NOT EXISTS `employeeDB`.`roles` (
   `roleID` INT NOT NULL,
   `title` VARCHAR(30) NOT NULL,
   `salary` DECIMAL(10,2) NOT NULL,
@@ -36,11 +34,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `employeedb`.`employees`
+-- Table `employeeDB`.`employees`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `employeedb`.`employees` (
+CREATE TABLE IF NOT EXISTS `employeeDB`.`employees` (
   `empID` INT NOT NULL,
-  `name` VARCHAR(45) NOT NULL,
+  `empName` VARCHAR(45) NOT NULL,
   `email` VARCHAR(45) NOT NULL,
   `roleID` INT NOT NULL,
   `deptID` INT NULL,
@@ -51,45 +49,45 @@ CREATE TABLE IF NOT EXISTS `employeedb`.`employees` (
   INDEX `fk_employees_roles1_idx` (`roleID` ASC) VISIBLE,
   CONSTRAINT `fk_employees_department1`
     FOREIGN KEY (`deptID`)
-    REFERENCES `employeedb`.`departments` (`deptID`)
+    REFERENCES `employeeDB`.`departments` (`deptID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_employees_roles1`
     FOREIGN KEY (`roleID`)
-    REFERENCES `employeedb`.`roles` (`roleID`)
+    REFERENCES `employeeDB`.`roles` (`roleID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `employeedb`.`managers_employee`
+-- Table `employeeDB`.`managers_employee`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `employeedb`.`managers_employee` (
-  `employees_empID` INT NOT NULL,
-  `employees_empID1` INT NOT NULL,
-  PRIMARY KEY (`employees_empID`, `employees_empID1`),
-  INDEX `fk_employees_has_employees_employees2_idx` (`employees_empID1` ASC) VISIBLE,
-  INDEX `fk_employees_has_employees_employees1_idx` (`employees_empID` ASC) VISIBLE,
+CREATE TABLE IF NOT EXISTS `employeeDB`.`managers_employee` (
+  `empID` INT NOT NULL,
+  `managerID` INT NOT NULL,
+  PRIMARY KEY (`empID`, `managerID`),
+  INDEX `fk_employees_has_employees_employees2_idx` (`managerID` ASC) VISIBLE,
+  INDEX `fk_employees_has_employees_employees1_idx` (`empID` ASC) VISIBLE,
   CONSTRAINT `fk_employees_has_employees_employees1`
-    FOREIGN KEY (`employees_empID`)
-    REFERENCES `employeedb`.`employees` (`empID`)
+    FOREIGN KEY (`empID`)
+    REFERENCES `employeeDB`.`employees` (`empID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_employees_has_employees_employees2`
-    FOREIGN KEY (`employees_empID1`)
-    REFERENCES `employeedb`.`employees` (`empID`)
+    FOREIGN KEY (`managerID`)
+    REFERENCES `employeeDB`.`employees` (`empID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `employeedb`.`projects`
+-- Table `employeeDB`.`projects`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `employeedb`.`projects` (
+CREATE TABLE IF NOT EXISTS `employeeDB`.`projects` (
   `projectID` INT NOT NULL,
-  `name` VARCHAR(45) NOT NULL,
+  `projectName` VARCHAR(45) NOT NULL,
   `budget` DECIMAL(10,2) NOT NULL,
   `start_date` DATE NOT NULL,
   PRIMARY KEY (`projectID`))
@@ -97,44 +95,44 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `employeedb`.`project_employees`
+-- Table `employeeDB`.`project_employees`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `employeedb`.`project_employees` (
-  `projects_projectID` INT NOT NULL,
-  `employees_empID` INT NOT NULL,
-  PRIMARY KEY (`projects_projectID`, `employees_empID`),
-  INDEX `fk_projects_has_employees_employees1_idx` (`employees_empID` ASC) VISIBLE,
-  INDEX `fk_projects_has_employees_projects1_idx` (`projects_projectID` ASC) VISIBLE,
+CREATE TABLE IF NOT EXISTS `employeeDB`.`project_employees` (
+  `projectID` INT NOT NULL,
+  `empID` INT NOT NULL,
+  PRIMARY KEY (`projectID`, `empID`),
+  INDEX `fk_projects_has_employees_employees1_idx` (`empID` ASC) VISIBLE,
+  INDEX `fk_projects_has_employees_projects1_idx` (`projectID` ASC) VISIBLE,
   CONSTRAINT `fk_projects_has_employees_projects1`
-    FOREIGN KEY (`projects_projectID`)
-    REFERENCES `employeedb`.`projects` (`projectID`)
+    FOREIGN KEY (`projectID`)
+    REFERENCES `employeeDB`.`projects` (`projectID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_projects_has_employees_employees1`
-    FOREIGN KEY (`employees_empID`)
-    REFERENCES `employeedb`.`employees` (`empID`)
+    FOREIGN KEY (`empID`)
+    REFERENCES `employeeDB`.`employees` (`empID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `employeedb`.`project_departments`
+-- Table `employeeDB`.`project_departments`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `employeedb`.`project_departments` (
-  `departments_deptID` INT NOT NULL,
-  `projects_projectID` INT NOT NULL,
-  PRIMARY KEY (`departments_deptID`, `projects_projectID`),
-  INDEX `fk_departments_has_projects_projects1_idx` (`projects_projectID` ASC) VISIBLE,
-  INDEX `fk_departments_has_projects_departments1_idx` (`departments_deptID` ASC) VISIBLE,
+CREATE TABLE IF NOT EXISTS `employeeDB`.`project_departments` (
+  `deptID` INT NOT NULL,
+  `projectID` INT NOT NULL,
+  PRIMARY KEY (`deptID`, `projectID`),
+  INDEX `fk_departments_has_projects_projects1_idx` (`projectID` ASC) VISIBLE,
+  INDEX `fk_departments_has_projects_departments1_idx` (`deptID` ASC) VISIBLE,
   CONSTRAINT `fk_departments_has_projects_departments1`
-    FOREIGN KEY (`departments_deptID`)
-    REFERENCES `employeedb`.`departments` (`deptID`)
+    FOREIGN KEY (`deptID`)
+    REFERENCES `employeeDB`.`departments` (`deptID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_departments_has_projects_projects1`
-    FOREIGN KEY (`projects_projectID`)
-    REFERENCES `employeedb`.`projects` (`projectID`)
+    FOREIGN KEY (`projectID`)
+    REFERENCES `employeeDB`.`projects` (`projectID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
