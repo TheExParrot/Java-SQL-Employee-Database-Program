@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class DatabaseInformation {
@@ -17,7 +18,9 @@ public class DatabaseInformation {
     }
 
     public String[] getTables() {
-        return database.keySet().toArray(new String[database.size()]);
+        String[] tables = database.keySet().toArray(new String[database.size()]);
+        Arrays.sort(tables);
+        return tables;
     }
 
 }

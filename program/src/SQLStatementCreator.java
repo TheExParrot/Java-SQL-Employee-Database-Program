@@ -5,6 +5,7 @@ import java.awt.event.*;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Arrays;
 
 public class SQLStatementCreator extends JFrame implements ActionListener {
 
@@ -16,6 +17,7 @@ public class SQLStatementCreator extends JFrame implements ActionListener {
     private JList<String> tableList, columnList;
     private JTextField conditionField;
     private JButton generateButton;
+    private JTextArea statementsArea;
 
     /* schema elements */
     private static final String[] tables = new String[]{"employees", "projects", "departments", "roles"};
@@ -45,19 +47,25 @@ public class SQLStatementCreator extends JFrame implements ActionListener {
                 for (String selectedValue : selectedValuesList) {
                     allSelectedValues.addAll(List.of(db.getAttributes(selectedValue)));
                 }
+                allSelectedValues.add("*");
 
                 /* convert it to an array and put it in the column list */
-                columnList.setListData(allSelectedValues.toArray(new String[0]));
+                String[] allAttributes = allSelectedValues.toArray(new String[0]);
+                Arrays.sort(allAttributes);
+                columnList.setListData(allAttributes);
             }
         });
 
         /* add functionality elements */
         conditionField = new JTextField();
+        statementsArea = new JTextArea();
+        statementsArea.setEditable(false);
+
         generateButton = new JButton("Generate SQL");
         generateButton.addActionListener(this);
 
         /* add GUI elements to the J panel */
-        JPanel panel = new JPanel(new GridLayout(5, 2));
+        JPanel panel = new JPanel(new GridLayout(4, 2));
         panel.add(tableLabel);
         panel.add(new JScrollPane(tableList));
         panel.add(columnLabel);
@@ -65,8 +73,9 @@ public class SQLStatementCreator extends JFrame implements ActionListener {
         panel.add(new JScrollPane(columnList));
         panel.add(conditionLabel);
         panel.add(conditionField);
-        panel.add(new JLabel()); // empty label for layout purposes
+        panel.add(statementsArea);
         panel.add(generateButton);
+
         add(panel);
 
         /* setup frame properties */
@@ -76,7 +85,7 @@ public class SQLStatementCreator extends JFrame implements ActionListener {
         setVisible(true);
     }
 
-    // Handle button clicks
+    /* handle pressing the generate button */
     public void actionPerformed(ActionEvent e) {
 
         if (e.getSource() == generateButton) {
@@ -97,6 +106,8 @@ public class SQLStatementCreator extends JFrame implements ActionListener {
             if (!condition.isEmpty()) {
                 sql.append(" WHERE ").append(condition);
             }
+            statementsArea.append(sql.toString() + "\n");
+            sql.append(";");
             this.statements.add(sql);
             System.out.println(this.statements);
         }
