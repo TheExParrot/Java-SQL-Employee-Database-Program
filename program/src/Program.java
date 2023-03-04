@@ -18,26 +18,27 @@ public class Program {
                 String password = scanner.nextLine();
                 System.out.print("Enter database URL: ");
                 String url = scanner.nextLine();
-                Connection con = DriverManager.getConnection(url, user, password);
+                Connection connection = DriverManager.getConnection(url, user, password);
 
-                /* connection was successful from here on */
-
-                /* create SQL query object */
-                Statement stmt=con.createStatement();
+                /* connection was successful from here on or skipped */
 
                 /* construct the string based on user inputs */
+
                 // query = "SELECT * FROM employees"
                 String query = "";
 
+                /* create SQL query object */
+                Statement statement = connection.createStatement();
+
                 /* obtain result set */
-                ResultSet rs=stmt.executeQuery(query);
+                ResultSet resultSet = statement.executeQuery(query);
 
                 /* print result set */
-                while(rs.next())
-                    System.out.println(rs);
+                while(resultSet.next())
+                    System.out.println(resultSet);
 
                 /* close the connection */
-                con.close();
+                connection.close();
 
 
                 /* exceptions */
