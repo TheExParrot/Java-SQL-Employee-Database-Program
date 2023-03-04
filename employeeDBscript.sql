@@ -61,28 +61,6 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `employeeDB`.`managers_employee`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `employeeDB`.`managers_employee` (
-  `empID` INT NOT NULL,
-  `managerID` INT NOT NULL,
-  PRIMARY KEY (`empID`, `managerID`),
-  INDEX `fk_employees_has_employees_employees2_idx` (`managerID` ASC) VISIBLE,
-  INDEX `fk_employees_has_employees_employees1_idx` (`empID` ASC) VISIBLE,
-  CONSTRAINT `fk_employees_has_employees_employees1`
-    FOREIGN KEY (`empID`)
-    REFERENCES `employeeDB`.`employees` (`empID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_employees_has_employees_employees2`
-    FOREIGN KEY (`managerID`)
-    REFERENCES `employeeDB`.`employees` (`empID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `employeeDB`.`projects`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `employeeDB`.`projects` (

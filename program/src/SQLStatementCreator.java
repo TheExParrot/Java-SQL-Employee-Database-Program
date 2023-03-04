@@ -13,16 +13,13 @@ public class SQLStatementCreator extends JFrame implements ActionListener {
     ArrayList<StringBuilder> statements = new ArrayList<>();
 
     /* gui attributes */
-    private JLabel tableLabel, columnLabel, conditionLabel;
+    private JLabel tableLabel;
+    private JLabel columnLabel;
+    private JLabel conditionLabel;
     private JList<String> tableList, columnList;
     private JTextField conditionField;
     private JButton generateButton;
     private JTextArea statementsArea;
-
-    /* schema elements */
-    private static final String[] tables = new String[]{"employees", "projects", "departments", "roles"};
-    private static final String[] attributes = new String[]
-            {"*", "employees", "projects", "departments", "roles"};
 
     /* constructor */
     public SQLStatementCreator(DatabaseInformation db) {
@@ -47,6 +44,7 @@ public class SQLStatementCreator extends JFrame implements ActionListener {
                 for (String selectedValue : selectedValuesList) {
                     allSelectedValues.addAll(List.of(db.getAttributes(selectedValue)));
                 }
+                /* add select all option */
                 allSelectedValues.add("*");
 
                 /* convert it to an array and put it in the column list */
@@ -75,10 +73,9 @@ public class SQLStatementCreator extends JFrame implements ActionListener {
         panel.add(conditionField);
         panel.add(statementsArea);
         panel.add(generateButton);
-
         add(panel);
 
-        /* setup frame properties */
+        /* setup panel/frame properties */
         setTitle("SQL Query Builder");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
@@ -97,16 +94,28 @@ public class SQLStatementCreator extends JFrame implements ActionListener {
 
             /* start creating the sql statement */
             StringBuilder sql = new StringBuilder();
-            sql.append("SELECT *");
-            sql.deleteCharAt(sql.length() - 1); // remove trailing comma
+            sql.append("SELECT ");
+
+            /* add selected columns */
+            sql.append(columns[0]);
+            for (int i = 1; i < columns.length; i++) {
+                sql.append(", ").append(columns[i]);
+            }
+            sql.append(" ");
+            //sql.deleteCharAt(sql.length() - 1); // remove trailing comma
+
             sql.append(" FROM ").append(tables[0]);
+
+            /* add tables */
             for (int i = 1; i < tables.length; i++) {
                 sql.append(" NATURAL JOIN ").append(tables[i]);
             }
             if (!condition.isEmpty()) {
                 sql.append(" WHERE ").append(condition);
             }
-            statementsArea.append(sql.toString() + "\n");
+
+            /* output to area and save */
+            statementsArea.append(sql + "\n");
             sql.append(";");
             this.statements.add(sql);
             System.out.println(this.statements);
