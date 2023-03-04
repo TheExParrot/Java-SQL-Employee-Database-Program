@@ -1,10 +1,14 @@
+import java.io.FileWriter;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import com.opencsv.CSVWriter;
+
 public class Program {
 
     public static void main (String[] args) {
+
 
         /* create scanner for user inputs */
         Scanner scanner = new Scanner(System.in);
@@ -37,17 +41,21 @@ public class Program {
                     /* create SQL query object */
                     Statement statement = connection.createStatement();
 
-                    /* obtain result set */
+                    /* obtain result set list from each query */
                     ArrayList<ResultSet> results = new ArrayList<>();
                     for (StringBuilder s: statements) {
                         results.add(statement.executeQuery(s.toString()));
                     }
 
-                    /* print result set
-                    while (resultSet.next())
-                        System.out.println(resultSet);*/
+                    /* for each SQL statement, save to a named csv */
+                    for (int i = 0; i < results.size(); i++) {
+                        CSVWriter csvWriter = new CSVWriter(new FileWriter(String.format("query%d.csv", i+1)));
+                        csvWriter.writeAll(results.get(i), true);
+                        csvWriter.close();
+                    }
 
                     /* close the connection */
+                    statement.close();
                     connection.close();
                 }
 

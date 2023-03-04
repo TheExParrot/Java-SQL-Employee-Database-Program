@@ -2,6 +2,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -102,8 +103,6 @@ public class SQLStatementCreator extends JFrame implements ActionListener {
                 sql.append(", ").append(columns[i]);
             }
             sql.append(" ");
-            //sql.deleteCharAt(sql.length() - 1); // remove trailing comma
-
             sql.append(" FROM ").append(tables[0]);
 
             /* add tables */
