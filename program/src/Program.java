@@ -20,7 +20,6 @@ public class Program {
                 DatabaseInformation db =
                         new DatabaseInformation("employeeDBjson.json");
                 SQLStatementCreator creator = new SQLStatementCreator(db);
-                ArrayList<StringBuilder> statements = creator.getStatements();
 
                 /* ask if the user wants to connect */
                 System.out.print("Do you wish to connect to an SQL database? (y/n) ");
@@ -38,12 +37,14 @@ public class Program {
                     String url = scanner.nextLine();
                     Connection connection = DriverManager.getConnection(url, user, password);
 
-                    /* create SQL query object */
+
+                    /* create SQL query object and obtain statements */
+                    ArrayList<StringBuilder> sqlStatements = creator.getStatements();
                     Statement statement = connection.createStatement();
 
                     /* obtain result set list from each query */
                     ArrayList<ResultSet> results = new ArrayList<>();
-                    for (StringBuilder s: statements) {
+                    for (StringBuilder s: sqlStatements) {
                         results.add(statement.executeQuery(s.toString()));
                     }
 
